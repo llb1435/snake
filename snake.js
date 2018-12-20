@@ -1,89 +1,96 @@
+(function() {
+    var elements = [];
 
-    (function() {
-        var elements = [];
+    function Snake(w, h, direction) {
+        this.width = w || 20;
+        this.height = h || 20;
+        this.direction = direction || "right";
 
-        function Snake(w, h, direction) {
-            this.width = w || 20;
-            this.height = h || 20;
-            this.direction = direction || "right";
+        this.body = [
+            { x: 3, y: 2, color: "red" },
+            { x: 2, y: 2, color: "orange" },
+            { x: 1, y: 2, color: "orange" },
+            // { x: 60, y: 2, color: "red" },
+            // { x: 40, y: 2, color: "orange" },
+            // { x: 20, y: 2, color: "orange" },
+        ];
+    }
 
-            this.body = [
-                { x: 3, y: 2, color: "red" },
-                { x: 2, y: 2, color: "orange" },
-                { x: 1, y: 2, color: "orange" },
-                // { x: 60, y: 2, color: "red" },
-                // { x: 40, y: 2, color: "orange" },
-                // { x: 20, y: 2, color: "orange" },
-            ];
+    Snake.prototype.init = function(map) {
+
+        remove();
+
+        for (var i = 0; i < this.body.length; i++) {
+            var obj = this.body[i];
+            var dv = document.createElement("div");
+            map.appendChild(dv);
+
+            dv.style.position = "absolute";
+            dv.style.width = this.width + "px";
+            dv.style.height = this.height + "px";
+            dv.style.left = obj.x * this.width + "px";
+            dv.style.top = obj.y * this.height + "px";
+            // dv.style.left = obj.x + this.width + "px";
+            // dv.style.top = obj.y + this.height + "px";                
+            dv.style.backgroundColor = obj.color;
+            dv.style.borderRadius = "50%";
+
+            elements.push(dv);
         }
+    };
 
-        Snake.prototype.init = function(map) {
+    Snake.prototype.move = function(food, map) {
 
-            remove();
-
-            for (var i = 0; i < this.body.length; i++) {
-                var obj = this.body[i];
-                var dv = document.createElement("div");
-                map.appendChild(dv);
-
-                dv.style.position = "absolute";
-                dv.style.width = this.width + "px";
-                dv.style.height = this.height + "px";
-                dv.style.left = obj.x * this.width + "px";
-                dv.style.top = obj.y * this.height + "px";
-                // dv.style.left = obj.x + this.width + "px";
-                // dv.style.top = obj.y + this.height + "px";                
-                dv.style.backgroundColor = obj.color;
-                dv.style.borderRadius = "50%";
-
-                elements.push(dv);
-            }
+        for (var i = this.body.length - 1; i > 0; i--) {
+            this.body[i].x = this.body[i - 1].x;
+            this.body[i].y = this.body[i - 1].y;
+            // // this.body[i].x = this.body[i - 1].x - this.width + 1;
+            // this.body[i].y = this.body[i - 1].y  + 1;
         };
 
-        Snake.prototype.move = function(food, map) {
+        switch (this.direction) {
+            case "right":
+                this.body[0].x += 1;
+                break;
+            case "left":
+                this.body[0].x -= 1;
+                break;
+            case "up":
+                this.body[0].y -= 1;
+                break;
+            case "down":
+                this.body[0].y += 1;
+                break;
+            default:
+                // statements_def
+                break;
+        };
 
-            for (var i = this.body.length - 1; i > 0; i--) {
-                this.body[i].x = this.body[i - 1].x;
-                this.body[i].y = this.body[i - 1].y;
-                // // this.body[i].x = this.body[i - 1].x - this.width + 1;
-                // this.body[i].y = this.body[i - 1].y  + 1;
-            };
+        var headX = this.body[0].x * this.width;
+        var headY = this.body[0].y * this.height;
 
-            switch (this.direction) {
-                case "right":
-                    this.body[0].x += 1;
-                    break;
-                case "left":
-                    this.body[0].x -= 1;
-                    break;
-                case "up":
-                    this.body[0].y -= 1;
-                    break;
-                case "down":
-                    this.body[0].y += 1;
-                    break;
-                default:
-                    // statements_def
-                    break;
-            };
+        // if(headX == food[i].x && headY == food[i].y) {
 
-            var headX = this.body[0].x * this.width;
-            var headY = this.body[0].y * this.height;
-
-            // if(headX == food.x && headY == food.y) {
-            var topLeft, topRight, downLeft, downRight;
-
-            if (((food.x >= headX) && (food.x <= headX + this.width)) && ((food.y >= headY) && (food.y <= headY + this.height))) {
+        for (var i = 0; i < 5; i++) {
+            var topLeft = false,
+                topRight = false,
+                downLeft = false,
+                downRight = false;
+            if (((food[i].x >= headX) && (food[i].x <= headX + this.width)) && ((food[i].y >= headY) && (food[i].y <= headY + this.height))) {
                 topLeft = true;
+                food[i].clear = true;
             }
-            if (((food.x + food.width >= headX) && (food.x + food.width <= headX + this.width)) && ((food.y >= headY) && (food.y <= headY + this.height))) {
+            if (((food[i].x + food[i].width >= headX) && (food[i].x + food[i].width <= headX + this.width)) && ((food[i].y >= headY) && (food[i].y <= headY + this.height))) {
                 topRight = true;
+                food[i].clear = true;
             }
-            if (((food.x >= headX) && (food.x <= headX + this.width)) && ((food.y + food.height >= headY) && (food.y + food.height <= headY + this.height))) {
+            if (((food[i].x >= headX) && (food[i].x <= headX + this.width)) && ((food[i].y + food[i].height >= headY) && (food[i].y + food[i].height <= headY + this.height))) {
                 downLeft = true;
+                food[i].clear = true;
             }
-            if (((food.x + food.width >= headX) && (food.x + food.width <= headX + this.width)) && ((food.y + food.height >= headY) && (food.y + food.height <= headY + this.height))) {
+            if (((food[i].x + food[i].width >= headX) && (food[i].x + food[i].width <= headX + this.width)) && ((food[i].y + food[i].height >= headY) && (food[i].y + food[i].height <= headY + this.height))) {
                 downRight = true;
+                food[i].clear = true;
             }
 
             if (topLeft || topRight || downLeft || downRight) {
@@ -93,18 +100,19 @@
                     y: last.y,
                     color: last.color
                 });
-                food.init(map);
-            }
-        };
-
-        function remove() {
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].parentElement.removeChild(elements[i]);
-            }
-            while (elements.length > 0) {
-                elements.pop();
+                food[i].init(map);
             }
         }
+    };
 
-        window.Snake = Snake;
-    }());
+    function remove() {
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].parentElement.removeChild(elements[i]);
+        }
+        while (elements.length > 0) {
+            elements.pop();
+        }
+    }
+
+    window.Snake = Snake;
+}());
