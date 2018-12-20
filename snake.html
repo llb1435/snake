@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .map {
+        width: 300px;
+        height: 300px;
+        background-color: #ccc;
+        border: 1px solid black;
+        position: relative;
+
+    }
+    </style>
+    <script src="food.js"></script>
+    <script src="game.js"></script>
+    <script src="game.js"></script>
+</head>
+
+<body>
+    <div class="map">
+    </div>
+    <script>
+
+
+
+
+    // var fd = new Food();
+    // var snake = new Snake(20, 20, "down");
+    // fd.init(document.querySelector(".map"));
+    // snake.init(document.querySelector(".map"));
+    // setInterval(function() {
+    //     snake.move();
+    //     snake.init(document.querySelector(".map"));
+    // }, 150);
+    // 
+    // 
+    var game = new Game(document.querySelector(".map"));
+    game.init();
+    </script>
+</body>
+
+</html>
